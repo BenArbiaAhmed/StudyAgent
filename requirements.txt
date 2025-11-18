@@ -3,3 +3,5 @@ langchain[anthropic]
 dotenv
 langchain-google-genai
 langchain-openai
+pyowm
+langchain_community

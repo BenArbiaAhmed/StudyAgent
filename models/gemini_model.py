@@ -1,12 +1,15 @@
 from langchain.chat_models import init_chat_model
 from dotenv import load_dotenv
-
+from langchain_google_genai import ChatGoogleGenerativeAI
 load_dotenv()
 
-model = init_chat_model(
+
+
+
+model = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
-    model_provider="google_genai",
     temperature=0.5,
+    max_tokens=1000,
     timeout=10,
-    max_tokens=1000
+    max_retries=3,
 )
