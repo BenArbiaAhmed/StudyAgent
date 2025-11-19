@@ -5,3 +5,5 @@ langchain-google-genai
 langchain-openai
 pyowm
 langchain_community
+langchain-groq
+langgraph-cli[inmem]>=0.4.0
