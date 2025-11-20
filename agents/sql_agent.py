@@ -7,7 +7,8 @@ from utils.database_wrapper import db
 from tools.database_tools import create_sql_tools
 from prompts.system_prompts.sql_query_prompt import get_system_prompt
 from langchain.agents.middleware import HumanInTheLoopMiddleware 
-from langgraph.types import Command 
+from langgraph.types import Command
+from response_format.sql_query_response_format import SQLQueryResponseFormat
 
 load_dotenv()
 
@@ -19,6 +20,7 @@ agent = create_agent(
     system_prompt=SYSTEM_PROMPT,
     tools=tools,
     checkpointer=checkpointer,
+    response_format=SQLQueryResponseFormat,
     middleware=[
         handle_tool_errors,
         dynamic_model_selection,
