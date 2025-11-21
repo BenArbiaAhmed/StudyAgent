@@ -9,6 +9,7 @@ from middleware.dynamic_model import basic_model, dynamic_model_selection
 from middleware.dynamic_system_prompt import user_role_prompt
 from middleware.handle_errors import handle_tool_errors
 from middleware.search_context import SearchContextMiddleware
+from utils.rate_limit import rate_limiter
 
 load_dotenv()
 
@@ -23,6 +24,7 @@ agent = create_agent(
     context_schema=Context,
     response_format=WebSearchResponseFormat,
     checkpointer=checkpointer,
+    rate_limiter=rate_limiter,
     middleware=[handle_tool_errors, user_role_prompt, dynamic_model_selection, SearchContextMiddleware()]
 )
 

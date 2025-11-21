@@ -1,4 +1,5 @@
 from langchain.agents.middleware import AgentMiddleware
+from langchain.tools import ToolRuntime
 
 class SearchContextMiddleware(AgentMiddleware):
     class State:
@@ -7,7 +8,7 @@ class SearchContextMiddleware(AgentMiddleware):
     
     state_schema = State
     
-    def before_model(self, state, runtime):
+    def before_model(self, state, runtime: ToolRuntime):
         search_history = state.get('search_history', [])
         messages = state.get('messages', [])
         if search_history:
