@@ -24,7 +24,7 @@ agent = create_agent(
     context_schema=Context,
     response_format=WebSearchResponseFormat,
     checkpointer=checkpointer,
-    rate_limiter=rate_limiter,
+    # rate_limiter=rate_limiter,
     middleware=[handle_tool_errors, user_role_prompt, dynamic_model_selection, SearchContextMiddleware()]
 )
 

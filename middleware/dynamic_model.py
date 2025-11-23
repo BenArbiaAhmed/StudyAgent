@@ -8,16 +8,18 @@ load_dotenv()
 basic_model = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
     temperature=0.5,
-    max_tokens=1000,
-    timeout=10,
-    max_retries=3,)
+    # max_tokens=1000,
+    # timeout=300,
+    # max_retries=3,
+    )
 
 advanced_model = ChatGoogleGenerativeAI(
     model="gemini-2.5-pro",
     temperature=0.5,
-    max_tokens=1000,
-    timeout=10,
-    max_retries=3,)
+    # max_tokens=1000,
+    # timeout=10,
+    # max_retries=3
+    )
 
 @wrap_model_call
 def dynamic_model_selection(request: ModelRequest, handler) -> ModelResponse:

@@ -7,3 +7,10 @@ pyowm
 langchain_community
 langchain-groq
 langgraph-cli[inmem]>=0.4.0
+pymupdf
+rapidocr-onnxruntime
+pytesseract
+langchain-docling
+uv
+"mineru[core]"
+google-genai
