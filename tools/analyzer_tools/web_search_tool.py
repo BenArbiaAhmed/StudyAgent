@@ -8,10 +8,20 @@ brave_search = BraveSearch()
 
 @tool
 def web_search(query: str, runtime: ToolRuntime) -> str:
-    """Search for information.
+    """
+    Search for information about unclear or incomplete concepts.
+    
+    Use this when:
+    - A concept needs a better definition
+    - Examples are missing
+    - Technical terms need clarification
+    - Prerequisites are unclear
     
     Args:
-        query: The search query to get response for 
+        query: The concept or term to search for (e.g., "gradient descent definition")
+    
+    Returns:
+        Search results with relevant information
     """
     writer = runtime.stream_writer
     writer(f"Looking up information to answer the query: {query}")

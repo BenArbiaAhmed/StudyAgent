@@ -16,3 +16,5 @@ uv
 google-genai
 pypdf
 langchain-chroma
+instructor
+langchain-google-community
