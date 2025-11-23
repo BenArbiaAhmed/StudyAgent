@@ -14,3 +14,5 @@ langchain-docling
 uv
 "mineru[core]"
 google-genai
+pypdf
+langchain-chroma
