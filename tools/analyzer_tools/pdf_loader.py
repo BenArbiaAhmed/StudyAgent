@@ -10,7 +10,7 @@ load_dotenv()
 genai_client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 @tool
-def summarize_pdf(file_path: str) -> str:
+def extract_pdf_content(file_path: str) -> str:
     """
     Extract the content of a PDF document.
     

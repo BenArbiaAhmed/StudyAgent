@@ -1,0 +1,503 @@
+المعهد الوطني للعلوم التطبيقية والتكنولوجيا -
+Ensat
+
+RT3
+# Logique Formelle
+
+# Chapitre 3 :
+# Calcul des prédicats ou
+# Logique du premier ordre
+
+Olfa Mosbahi
+olfamosbahi@gmail.com
+1
+
+# Logique des prédicats
+
+1.  **Introduction**
+
+2.  **Terme, atomes et formules bien formées**
+
+3.  **Interprétation des formules**
+
+4.  **Validité et inconsistance**
+
+5.  **Conséquence logique**
+
+6.  **Forme Normale Prénexe**
+2
+
+# 1. Introduction
+
+*   La logique du premier ordre est la base de plusieurs formalismes de représentation de connaissances et du raisonnement déductif (utilisé entre autres par les systèmes experts)
+
+*   La logique du premier ordre est un **modèle mathématique** du raisonnement déductif (processus permettant d'inférer des expressions valides à partir des faits/ prémisses)
+
+*   La logique du premier ordre est un langage qui permet de :
+    *   **Représenter les connaissances** d'un expert
+    *   **Faire des déductions logiques**
+3
+
+# 1. Introduction
+
+## Exemples :
+
+*   Prouvez que Marcus hait César à partir de :
+    1.  Marcus est une personne.
+    2.  Marcus est un pompéien.
+    3.  Tous les pompéiens sont des romains.
+    4.  César est un dirigeant.
+    5.  Tout le monde est loyal à quelqu'un.
+    6.  Tous les romains sont loyaux à César ou le haïssent.
+    7.  Les seuls dirigeants qu'une personne essaie d'assassiner sont ceux auxquels elle n'est pas loyale.
+    8.  Marcus a essayé d'assassiner César.
+
+*   Déduire la maladie du patient et le traitement approprié, à partir de :
+    1.  Symptômes d'un patient.
+    2.  Règles de causalité entre les symptômes et les pathologies.
+    3.  Règles de causalité sur les traitements.
+
+*   Diagnostiquer le problème d'un véhicule à partir de :
+    1.  Symptômes d'un véhicule.
+    2.  Règles de causalité pour la mécanique auto.
+4
+
+# 1. Introduction
+
+## Exemple : schéma d'un système expert
+
+![Diagram showing the components of an expert system: Knowledge Base, Facts, Inference Engine, Working Memory, Query, and Response. Connections indicate data flow.](image1.png)
+
+*   La base de connaissances est spécifiée par des règles logiques
+*   Les faits sont des propositions logiques
+*   La mémoire de travail peut être vue comme un état
+*   Le moteur de recherche est une exploration de l'espace d'états
+*   Exemple :
+    *   Java Expert System Shell (JESS)
+5
+
+# 1. Introduction
+
+*   **Logique des propositions**
+    ensemble de propositions:
+    **p:** il fait beau,
+    **q:** je vais sortir
+    des connecteurs logiques
+    **¬** négation
+    **∧** conjonction
+    **∨** disjonction
+    **→** implication logique (si ... alors)
+    **↔** équivalence logique (si et seulement si)
+*   **Logique des prédicats**
+    Si la valeur des propositions est variable alors nous utilisons :
+    Des symboles de prédicats
+    **Homme(x)** qui vaut vrai si x est un homme et faux sinon **Mortel(x)**
+    Les connecteurs logiques : **∧, ∨, →, ↔ et ¬**
+    +
+    les quantificateurs universel et existentiel : **∀ et ∃**
+6
+
+# 1. Introduction
+
+La logique du premier ordre (**lpr1**) enrichit la logique des propositions avec **3** nouveaux concepts : **termes, prédicats et quantificateurs** pour pouvoir exprimer et prouver des faits et des phrases qu'on ne peut pas exprimer et prouver avec la logique des propositions.
+
+**Exemple** : considérons les faits suivants:
+**P:** tout homme est mortel
+**Q:** Socrate est un homme
+**R:** Socrate est mortel
+
+On peut les exprimer dans la **lpr1** par :
+**P:** ∀x (homme (x) → mortel(x))
+**Q:** homme (Socrate)
+**R:** mortel(Socrate)
+Dans lpr1, R est une conséquence logique de P et Q
+
+**Rq1.** Les structures de P et Q ne sont pas utilisées en lpo ce qui ne nous permet pas de déduire la conséquence
+**Rq2.** Homme(x), mortel(x) sont des prédicats
+7
+
+# 1. Introduction
+
+*   **Symbole de prédicat**
+    *   Pour représenter le fait 'x est plus grand que 3', on définit un symbole de prédicat d'arité 2 'plus\_grand'.
+    *   Le prédicat `plus_grand(x, y)` signifie que 'x est plus grand que y'
+    *   'x est plus grand que 3' est représenté par `plus_grand(x, 3)`.
+    *   Un symbole de prédicat est un symbole de fonction qui donne des valeurs dans {T, F}.
+
+*   **Symbole de fonction**
+    *   Pour représenter 'x+2', on définit un symbole de fonction d'arité 2 'plus'. La fonction `plus(x, y)` représente 'x+y'.
+    *   'x+2' est représenté par `plus(x, 2)`
+    *   Un symbole de fonction est une fonction qui donne des valeurs dans un domaine.
+    *   Le fait 'x+1 est plus grand que x' est représenté par :
+        `Plus_grand(plus(x, 1), x)` / `1` : constante, `x` : variable
+8
+
+# 2. Termes, Atomes et Formules bien formées
+
+**Définition 1. Terme.** Les termes sont définis récursivement comme suit :
+1) Une **constante** est un terme
+2) Une **variable** est un terme
+3) Si f est un **symbole de fonction** n-aire et t1, t2, ...tn sont des termes alors **f(t1, t2, ...tn)** est un terme
+
+**Exemple :**
+X et 1 sont des **termes**, Plus est un symbole de fonction binaire alors :
+- `Plus(x, 1)` est un **terme** et
+- `Plus(Plus(x, 1), x)` est un **terme** qui représente `(x+1) + x`
+
+**Rq1.** Un prédicat associe une valeur parmi {T, F} à une liste de constantes
+`Plus_grand (5, 3)` est vraie mais
+`Plus_grand(3, 5)` est fausse.
+9
+
+# 2. Termes, Atomes et Formules bien formées
+
+**Définition 2. Atome.**
+*   Si p est un symbole de prédicat n-aire et t1, t2, ... tn sont des termes alors **p(t1, t2, ...tn)** est un **atome** ou formule atomique.
+*   Avec les atomes, les connecteurs logiques et les quantificateurs **∃** et **∀**, on peut construire des **formules du calcul des prédicats.**
+
+**Exemple :**
+Ecrire des formules en logique des prédicats d'ordre 1 pour les faits suivants.
+1) Chaque nombre rationnel est un nombre réel
+2) Il existe un nombre qui est premier
+3) Pour chaque nombre x, il existe un nombre y tel que x<y
+
+On définit les symboles de prédicats suivants:
+`N(x)` qui représente 'x est nombre'
+`R(x)` qui représente 'x est un nombre réel'
+`Q(x)` qui représente 'x est un nombre rationnel'
+`P(x)` qui représente 'x est un nombre premier'
+10
+
+# 2. Termes, Atomes et Formules bien formées
+
+`Plus_petit(x, y)` qui représente 'x est plus petit que y'
+
+**Correction Exemple :**
+La formulation est la suivante
+
+1) Chaque nombre rationnel est un nombre réel
+    ∀x (Q(x) → R(x))
+
+2) Il existe un nombre qui est premier
+    ∃x P(x)
+
+3) Pour chaque nombre x, il existe un nombre y tel que x < y
+    ∀x ∃y (N(x) ∧ N(y) ∧ Plus\_petit(x, y))
+11
+
+# 2. Termes, Atomes et Formules bien formées
+
+**Définition 3. Portée d'un quantificateur** : La portée d'un quantificateur est la formule à laquelle il s'applique.
+**Exemple:**
+La portée de ∀ dans la formule `∀ x (Q(x) → R(x))` est `Q(x) → R(x)`
+Il y a 3 occurrences de la variable x dans la formule `∀ x (Q(x) → R(x))`
+
+**Définition 4. Occurrence libre ou liée - Variable libre et/ou liée**
+*   Les variables d'un atome sont **libres** dans toutes leurs occurrences
+*   Si A est de la forme `(B ∨ C)`, `(B ∧ C)`, `(B → C)`, `(¬B)` alors une occurrence d'une variable est **liée** dans A SSI elle était **liée** dans la formule B ou C
+*   Si une formule A est de la forme `(∃x) B` ou `(∀x) B` alors une occurrence d'une variable est **liée** dans A si cette variable est x ou si cette occurrence est **liée** dans la sous formule B.
+12
+
+# 2. Termes, Atomes et Formules bien formées
+
+## Occurrence libre ou liée
+
+*   Une occurrence d'une variable x dans une formule est **liée** ssi cette occurrence est dans la portée d'un quantificateur employant x ou elle est l'occurrence du quantificateur.
+*   Une occurrence d'une variable est **libre** si cette occurrence n'est pas liée.
+
+## Variable libre et/ou libre
+
+*   Une variable est **libre** dans une formule si au moins une occurrence de cette variable est libre dans la formule
+*   Une variable est **liée** si au moins une occurrence de cette variable est liée.
+
+## Formule fermée.
+Si une formule F ne contient pas de variables libres alors F est une formule fermée (close).
+
+## Exemple:
+`(∀x) P(x, y)`
+*   Les deux occurrences de x sont liées donc la variable x est liée.
+*   La seule occurrence de y est libre donc la variable y est libre
+`(∀x) P(x, y) ∧ (∀y) Q(y)`
+*   La variable y est libre et liée dans cette formule (Une variable peut être libre et liée dans une formule)
+13
+
+# 2. Termes, Atomes et Formules bien formées
+
+**Définition 5. Formule bien formée de lpr1**
+Les formules bien formées de la logique des prédicats sont définies récursivement comme suit :
+
+1) Un **atome** est une formule
+2) Si F et G sont des fbf alors `¬F`, `F ∨ G`, `F ∧ G`, `F → G`, `F ↔ G` et `(F)` sont des fbf
+3) Si F est une fbf et x est une variable libre dans F alors `(∀x) F` et `(∃x) F` sont des fbf
+
+*   **Priorités et parenthèses**
+    *   ordre des priorités : `¬, ∧, ∨, →`
+    *   on utilise les parenthèses de la même façon que dans les expressions arithmétiques pour éviter les ambiguïtés
+    *   les quantifieurs s'appliquent à toute la formule à sa droite
+        *   ex. : `∀x p(x) ∨ q(x) → r(x)` est équivalent à
+            `∀x (p(x) ∨ q(x) → r(x))` et non
+            `(∀x p(x)) ∨ q(x) → r(x)`
+14
+
+# 2. Termes, Atomes et Formules bien formées
+
+## Exemple :
+Soient les axiomes de base pour les entiers naturels :
+**(A1)** Chaque entier admet un et un seul successeur
+**(A2)** Il n'y a aucun entier ayant 0 comme successeur
+**(A3)** Pour tout entier non nul, il y a un et un seul prédécesseur
+
+Exprimer formellement ces énoncés
+
+## Solution :
+On définit les symboles suivants:
+`Succ(x)` : Successeur de l'entier x
+`Pred(x)` : prédécesseur de l'entier x
+`Egal(x, y)` : l'entier x est égal à l'entier y
+
+**Équivalences**
+*   `α ∨ β` est équivalent à `¬ (¬ α ∧ ¬ β)`
+*   `α → β` est équivalent à `¬ α ∨ β`
+*   `∃v α` est équivalent à `¬ ∀v ¬α`
+
+**(A1)** `(∀x) (∃y) (Egal(y, succ(x)) ∧ (∀z) (Egal(z, succ(x)) → Egal(y, z)))`
+**(A2)** `¬ (∃x Egal(0, succ(x)))`
+**(A3)** `∀x (¬Egal(x, 0) → (∃y(Egal(y, pred(x)) ∧ ∀z(Egal(z, pred(x)) → Egal(y, z)))))`
+15
+
+# 2. Termes, Atomes et Formules bien formées
+
+# Exercice
+
+*   **Faits :**
+    1.  Marcus est une personne.
+    2.  Marcus est un pompéien.
+    3.  Tous les pompéiens sont des romains.
+    4.  César est un dirigeant.
+    5.  Tout le monde est loyal à quelqu'un.
+    6.  Tous les romains sont loyaux à César ou le haïssent.
+    7.  Les seuls dirigeants qu'une personne essaie d'assassiner sont ceux auxquels elle n'est pas loyal.
+    8.  Marcus a essayé d'assassiner César.
+
+*   **Forme logique du premier ordre :**
+    1.  `personne(Marcus)`
+    2.  `pompeien(Marcus)`
+    3.  `∀ x pompeien(x) → romain(x)`
+    4.  `dirigeant(Cesar)`
+    5.  `∀x ∃y loyal(x,y)`
+    6.  `∀ x romain(x) → loyal(x,Cesar) ∨ hait(x,Cesar)`
+    7.  `∀x∀y personne(x) ∧ dirigeant(y) ∧ assassiner(x,y) → ¬ loyal(x,y)`
+    8.  `assassiner(Marcus,Cesar)`
+16
+
+# 3. Interprétation de Formules
+
+*   Dans la logique des propositions, l'interprétation d'une formule consiste à affecter une valeur de vérité aux différents atomes de cette formule.
+
+*   Toute formule contenant des variables libres ne peut être évaluée. On suppose que les formules qu'on traite ne contiennent pas de variables libres ou si elle les contiennent alors celles-ci seront traitées comme des constantes.
+
+*   L'introduction des variables dans la logique des prédicats va changer l'interprétation d'une formule. On peut assigner à chaque formule un sens en « interprétant » les symboles et les variables. En associant différentes interprétations à une formule, on obtient plusieurs phrases (déclarations) telles que chacune est soit vraie soit fausse.
+
+*   Dans le calcul des prédicats, il y a en général un nombre infini de domaines et un nombre infini d'interprétations. On ne peut donc vérifier la validité ou l'inconsistance d'une formule en l'évoluant dans toutes ses interprétations possibles.
+17
+
+# 3. Interprétation de Formules
+
+*   Le problème de validité revient à trouver un algorithme qui décide si une formule donnée est valide ou non.
+    *   Le problème de validité admet une solution dans le calcul des propositions (**est solvable**)
+    *   Le problème de validité admet une solution partielle dans le calcul des prédicats (**est partiellement solvable**)
+    *   Le problème de validité n'admet pas de solution du tout dans le calcul du second ordre (**n'est pas solvable**)
+
+**Définition 6.** Une interprétation d'une formule F consiste en un ensemble non vide D et une affectation d'une valeur à chaque variable, symbole de fonction et symbole de prédicat apparaissant dans F comme suit :
+1- On affecte un élément de D à chaque variable
+2- On affecte une fonction de Dⁿ → D à chaque symbole de fonction n-aire
+3- On affecte une fonction de Dⁿ → {T, F} à chaque symbole de prédicat n-aire
+D est appelé domaine d'interprétation de la formule F
+
+**Rq.** Pour n= 0, un symbole de fonction 0-aire dénote un élément de D et un symbole de prédicat 0-aire dénote une valeur de vérité dans {T, F}
+18
+
+# 3. Interprétation de Formules
+
+*   Quand on évalue la valeur de vérité d'une formule dans une interprétation avec le domaine D,
+
+    `(∀x)` est interprété par « **pour tout élément x de D** »
+    `(∃x)` est interprété par « **il existe un élément x ∈ D** ».
+
+*   Pour toute interprétation d'une formule A dans un domaine D, A est évaluée à T ou F selon les règles suivantes :
+
+    1) Si on connaît la valeur de vérité de G et H alors la valeur de vérité des formules `¬G`, `G ∧ H`, `G ∨ H`, `G → H` et `G ↔ H` est obtenue conformément aux règles d'évaluation des formules de **lp0**
+    2) `(∀x) G` est évaluée à T si G est évaluée à T pour tout élément `∈ D` sinon elle est évaluée à F.
+    3) `(∃x) G` est évaluée à T si G est évaluée à T pour au moins un élément de D sinon elle est évaluée à F
+
+**Rq.** Une formule contenant une variable libre ne peut pas être évaluée.
+19
+
+# 3. Interprétation de Formules
+
+## Exemple 1 :
+Considérons les formules : `(∀x) P(x)` et `(∃x) ¬ P(x)`
+D = {1, 2}
+Affectation : P(1) = T et P(2) = F
+`(∀x) P(x)` est fausse dans cette interprétation puisque P(n) n'est pas vraie pour les deux éléments de D.
+`(∃x) ¬ P(x)` est vraie dans cette interprétation puisqu'il existe un élément de D(x=2) / la formule soit vraie.
+
+## Exemple 2 :
+Considérons la formule F : `(∀x) (∃y) P(x, y)`
+D = {1, 2}
+Affectation : P(1, 1) = T, P(1, 2) = F, P(2, 1) = F, P(2, 2) = T
+Si (x = 1) (∃y = 1) / P(1, y) est vraie
+Si (x = 2) (∃y = 2) / P(2, y) est vraie
+
+Donc `(∀x) (∃y) P(x, y)` est vraie sur D
+20
+
+# 3. Interprétation de Formules
+
+## Exemple 3 :
+Considérons la formule G : `(∀x) (p(x) → q(f(x), a))`
+Considérons l'interprétation I suivante:
+D = {1, 2}, a= 1, f(1) = 2, f(2) = 1
+p(1) = F, p(2) = T, q(1,1) = T, q(1, 2) = T, q(2, 1) = F et q(2, 2) = T
+L'évaluation de G donne la valeur vraie (T), En effet :
+
+*   Si x = 1 alors p(x) → q(f(x), a) = p(1) → q(f(1), a)
+    = p(1) → q(2, 1)
+    = F → F = T
+
+*   Si x = 2 alors p(x) → q(f(x), a) = p(2) → q(f(2), a)
+    = p(2) → q(1, 1)
+    = T → T = T
+
+Nous avons ainsi p(x) → q(f(x), a) vraie ∀x ∈ D
+Alors `(∀x) (p(x) → q(f(x), a))` est vraie
+21
+
+# 4- Validité et Inconsistance
+
+**Définition 7.**
+*   Une formule G est **consistante** (satisfiable) ssi il existe une interprétation I / G est évaluée à T dans I.
+    I est dit un **modèle** de G et I **satisfait** G
+*   Une formule G est **inconsistante** (insatisfiable) ssi il n'existe aucune interprétation satisfaisant G
+*   Une formule G est **valide** ssi chaque interprétation I de G satisfait G
+
+**Rq.** Le problème de validité consiste à trouver un algorithme qui décide si une formule donnée est valide ou non.
+1) Le problème de validité admet une solution dans **lp0**
+2) Le problème de validité admet une solution partielle dans **lpr1**
+3) Le problème de validité n'admet pas de solution dans **lpr d'ordre supérieur.**
+
+**Validité partielle**: algorithme répond par oui si la formule est valide et boucle infiniment ou répond par non si la formule n'est pas prouvée valide.
+22
+
+# 5- Conséquence Logique
+
+**Définition 8.**
+Une formule G est une conséquence sémantique ou logique des formules `F1, F2, ... Fn` ssi pour chaque interprétation I, si `F1 ∧ F2 ∧ ... Fn` est vraie dans I alors G est aussi vraie dans I.
+On le note par : `F1, F2, ... Fn |= G`
+
+**Exemple :**
+`F1: (∀x) (p(x) → q(x))`
+`F2 : p(a)`
+`Mq : {F1, F2} |= q(a)`
+
+Soit une interprétation I qui satisfait F1 et F2: `((∀x) (p(x) → q(x)) ∧ p(a))`
+Certainement P(a) est vraie dans I
+Mq q(a) est vraie dans I
+Supposons q(a) n'est pas T dans I
+`⇒` (pour x = a) `¬p(a) ∨ q(a)` est F dans I `⇒ p(a) → q(a)` est F dans I
+`⇒ (∀x) (p(x) → q(x))` est F dans I ce qui est impossible donc
+q(a) doit être vraie dans chaque interprétation qui satisfait F1 et F2.
+23
+
+# 6- Forme Normale Prénexe
+
+Pour simplifier les procédures de preuve, on a besoin de transformer les formules du calcul des prédicats en une forme dite forme normale prénexe (FNP).
+
+**Définition 9.**
+Une formule du calcul des prédicats est dite sous forme normale prénexe (**FNP**) si elle est de la forme `(Q1x1)(Q2x2) ...(Qnxn) (M)` où
+*   Qi est soit `∃` soit `∀`,
+*   M une formule sans quantificateur (M est appelée Matrice) et
+*   `(Q1x1)...(Qnxn)` est appelé préfixe
+
+**Exemple:**
+`(∀x) (∃y) (¬P(x, y) → Q(y))`
+`(∀x) (∃y) (P(x, y) ∧ Q(y))`
+`(∀x) (∃y) (∃z) (Q(x, y) → R(z))`
+Dans le calcul des prédicats, il y a en général un nombre infini de domaines et un nombre infini d'interprétations. On ne peut donc vérifier la validité ou l'inconsistance d'une formule en l'évaluant dans toutes ses interprétations possibles. Nous verrons une procédure de preuve automatique.
+24
+
+# 6- Forme Normale Prénexe
+
+## Formules Equivalentes
+
+F est équivalent à G, noté `F ≡ G` ssi F et G ont la même valeur de vérité dans toute interprétation. Les lois d'équivalence entre formules du calcul des propositions restent valables. On va introduire de nouvelles lois tenant compte des variables et des quantificateurs.
+Soit F une formule contenant une variable libre x qu'on note par `F[x]` et soit G une formule ne contenant pas la variable x. Considérons Q, un quantificateur (`∃`, `∀`).
+(1a) `(Qx) F[x] ∨ G ≡ (Qx) (F[x] ∨ G)`
+(1b) `(Qx) F[x] ∧ G ≡ (Qx) (F[x] ∧ G)`
+(2a) `¬((∀x) F[x]) ≡ (∃x) (¬F[x])`
+(2b) `¬((∃x) F[x]) ≡ (∀x) (¬F[x])`
+Considérons maintenant deux formules, `F[x]` et `H[x]` contenant la variable x.
+(3a) `(∀x) F[x] ∧ (∀x) H[x] ≡ (∀x) (F[x] ∧ H[x])`
+(3b) `(∃x) F[x] ∨ (∃x) H[x] ≡ (∃x) (F[x] ∨ H[x])`
+
+**Remarques:**
+`(∀x) F[x] ∨ (∀x) H[x] ≠ (∀x) (F[x] ∨ H[x])`
+`(∃x) F[x] ∧ (∃x) H[x] ≠ (∃x) (F[x] ∧ H[x])`
+25
+
+# 6- Forme Normale Prénexe
+
+Pour pouvoir transformer de telles formules, on peut renommer les variables. En effet, chaque variable liée dans une formule peut être renommée.
+
+**Exemples :**
+`(∀x) H[x]` devient `(∀z) H[z]` en supposant que z n'apparaît pas dans `H[x]`.
+
+`(∀x) F[x] ∨ (∀x) H[x]`
+`= (∀x) F[x] ∨ (∀z) H[z]`
+`= (∀x) (∀z) (F[x] ∨ H[z])` (loi 1a)
+
+`(∃x) F[x] ∧ (∃x) H[x]`
+`= (∃x) F[x] ∧ (∃z) H[z]`
+`= (∃x) (∃z) (F[x] ∧ H[z])` (loi 1b)
+
+(4a) `(Q1x) F[x] ∨ (Q2x) H[x] = (Q1x) (Q2z) (F[x] ∨ H[z])`
+(4b) `(Q3x) F[x] ∧ (Q4x) H[x] = (Q3x) (Q4z) (F[x] ∧ H[z])`
+avec : `Q1, Q2, Q3, Q4 ∈ {∀, ∃}` et `z` n'apparaît pas dans `H[x]`
+
+Si `Q1=Q2 = ∃` et `Q3=Q4 = ∀`, alors on n'a pas à faire renommer x dans `(Q2x) H[x]` ou `(Q4x) H[x]` et on utilise directement (3a) et (3b)
+26
+
+# 6- Forme Normale Prénexe
+
+## Algorithme de Transformation
+
+**Etape 1 :** Eliminer les opérateurs `→` et `↔` avec les lois suivantes :
+`F → G ≡ ¬F ∨ G`
+`F ↔ G ≡ (F → G) ∧ (G → F)`
+
+**Etape 2 :** ramener les signes de négation immédiatement avant les atomes avec les lois suivantes :
+`¬(¬F) ≡ F`
+`¬(F ∨ G) ≡ ¬F ∧ ¬G`
+`¬(F ∧ G) ≡ ¬F ∨ ¬G`
+`¬((∀x) F[x]) ≡ (∃x) (¬F[x])`
+`¬((∃x) F[x]) ≡ (∀x) (¬F[x])`
+
+**Etape 3 :** Renommer les variables si nécessaires,
+
+**Etape 4 :** Ramener les quantificateurs au début de la formule pour obtenir la FNP en utilisant les lois suivantes :
+(1a) `(Qx) F[x] ∨ G ≡ (Qx) (F[x] ∨ G)`
+(1b) `(Qx) F[x] ∧ G ≡ (Qx) (F[x] ∧ G)`
+(3a) `(∀x) F[x] ∧ (∀x) H[x] ≡ (∀x) (F[x] ∧ H[x])`
+(3b) `(∃x) F[x] ∨ (∃x) H[x] ≡ (∃x) (F[x] ∨ H[x])`
+(4a) `(Q1x) F[x] ∧ (Q2x) H[x] = (Q1x) (Q2z) (F[x] ∧ H[z])`
+(4b) `(Q3x) F[x] ∨ (Q4x) H[x] = (Q3x) (Q4z) (F[x] ∨ H[z])`
+27
+
+# 6- Forme Normale Prénexe
+
+## Exemples :
+
+1) `(∀x) P(x) → (∃x) Q(x)`
+
+2) `(∀x) (∀y) ( (∃z) ( P(x, z) ∧ P(y, z)) → (∃u) Q(x, y, u))`
+28

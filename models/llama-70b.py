@@ -45,9 +45,9 @@ llm = ChatGroq(
 #     print(response)
 
 ### Batch as completed ###
-for response in llm.batch_as_completed([
-    "Why do parrots have colorful feathers?",
-    "How do airplanes fly?",
-    "What is quantum computing?"
-]):
-    print(response)
+# for response in llm.batch_as_completed([
+#     "Why do parrots have colorful feathers?",
+#     "How do airplanes fly?",
+#     "What is quantum computing?"
+# ]):
+#     print(response)
