@@ -3,7 +3,7 @@ from langchain.agents import create_agent
 from prompts.system_prompts.web_search_prompt import SYSTEM_PROMPT
 from tools.analyzer_tools.web_search_tool import web_search
 from response_format.web_search_response_format import WebSearchResponseFormat
-from data_classes.context import Context
+from response_format.context_data_class import Context
 from memory.memory import checkpointer
 from middleware.dynamic_model import basic_model, dynamic_model_selection
 from middleware.dynamic_system_prompt import user_role_prompt

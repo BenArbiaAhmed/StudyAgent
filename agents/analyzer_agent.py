@@ -9,22 +9,27 @@ from tools.analyzer_tools.web_search_tool import web_search
 from prompts.system_prompts.analyzer_agent_prompt import CONCEPT_EXTRACTION_WITH_SEARCH_PROMPT
 
 
-agent = create_agent(
+analyzer_agent = create_agent(
             model=basic_model,
-            tools=[
-                extract_pdf_content,      
+            tools=[      
                 web_search   
             ],
             response_format=ConceptList,
             system_prompt=CONCEPT_EXTRACTION_WITH_SEARCH_PROMPT
         )
 
-query = (
-    "What should I retain from this PDF: C:/Users/ahmed/Projects/multi-purpose-ai-agent/data/logique.pdf"
-)
+# pdf_content = extract_pdf_content("C:/Users/ahmed/Projects/multi-purpose-ai-agent/data/logique.pdf")
 
-for event in agent.stream(
-    {"messages": [{"role": "user", "content": query}]},
-    stream_mode="values",
-):
-    event["messages"][-1].pretty_print()
+# query = (
+#     f"""What should I retain from this PDF ?
+#     <pdf_content>
+#     {pdf_content}
+#     </pdf_content>
+#     """
+# )
+
+# for event in analyzer_agent.stream(
+#     {"messages": [{"role": "user", "content": query}]},
+#     stream_mode="values",
+# ):
+#     event["messages"][-1].pretty_print()

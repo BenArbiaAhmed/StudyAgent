@@ -105,19 +105,19 @@ workflow.add_conditional_edges(
 )
 workflow.add_edge("refiner", "critic")
 
-app = workflow.compile()
+flashcards_app = workflow.compile()
 
 # Run the workflow
-result = app.invoke({
-    "source_text": """"
-    """,
-    "deck": None,
-    "critique": None,
-    "revision_needed": False,
-    "iteration_count": 0
-})
+# result = flashcards_app.invoke({
+#     "source_text": """"
+#     """,
+#     "deck": None,
+#     "critique": None,
+#     "revision_needed": False,
+#     "iteration_count": 0
+# })
 
-final_deck = result["deck"]
-for card in final_deck.cards:
-    print(f"Q: {card.front}")
-    print(f"A: {card.back}\n")
+# final_deck = result["deck"]
+# for card in final_deck.cards:
+#     print(f"Q: {card.front}")
+#     print(f"A: {card.back}\n")

@@ -5,7 +5,7 @@ from langchain_chroma import Chroma
 from dotenv import load_dotenv
 from langchain.tools import tool
 from pathlib import Path
-from tools.analyzer_tools.pdf_loader import extract_pdf_content
+from tools.analyzer_tools.pdf_loader import extract_pdf_content_tool
 import os
 import hashlib
 
@@ -84,7 +84,7 @@ def setup_for_rag(
             extracted_content = cache_file.read_text(encoding="utf-8")
         else:
             print(f"Extracting content from {file_path} using Gemini...")
-            extracted_content = extract_pdf_content.invoke({"file_path": file_path})
+            extracted_content = extract_pdf_content_tool.invoke({"file_path": file_path})
             
             if extracted_content.startswith("Error"):
                 raise ValueError(f"Failed to extract PDF: {extracted_content}")
