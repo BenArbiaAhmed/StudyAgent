@@ -18,3 +18,5 @@ pypdf
 langchain-chroma
 instructor
 langchain-google-community
+langchain-ollama
+ollama
