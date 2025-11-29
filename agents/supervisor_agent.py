@@ -1,19 +1,21 @@
-from typing import Annotated, TypedDict, Literal
+from typing import Annotated, TypedDict, Literal, Any
 from langgraph.graph import StateGraph, START, END
 from langgraph.graph.message import add_messages
 from langchain_core.messages import HumanMessage, AIMessage, AnyMessage
 from prompts.system_prompts.supervisor_agent_prompt import SUPERVISOR_SYSTEM_PROMPT
 from agents.analyzer_agent import analyzer_agent
-from agents.rag_agent import rag_agent
+from agents.rag_agent import create_rag_agent
 from workflows.flashcards_workflow import flashcards_app
-
+from agents.rag_agent import create_rag_agent
 from langchain_core.prompts import ChatPromptTemplate
 from pydantic import BaseModel, Field
 from middleware.dynamic_model import basic_model
+from tools.analyzer_tools.semantic_search import create_retrieve_context_tool
 import re
 class SupervisorState(TypedDict):
     messages: Annotated[list[AnyMessage], add_messages]
     pdf_markdown: str
+    vector_store: Any 
     next: Literal["analyzer", "rag", "flashcards", "end"]
 
 class RouteDecision(BaseModel):
@@ -72,14 +74,13 @@ def supervisor_node(state: SupervisorState):
 def decide_next_agent(state: SupervisorState):
     return state["next"]
 
-def analyzer_node(state: SupervisorState):
-    print("Analyzer Node Working\n")
+
+def analyzer_node(state: SupervisorState): 
     pdf_content = state.get("pdf_markdown", "")
     last_message = state["messages"][-1].content
     
     combined_message = HumanMessage(
         content=f"""{last_message}
-
         Here is the PDF content to analyze:
         <pdf_content>
         {pdf_content}
@@ -88,23 +89,33 @@ def analyzer_node(state: SupervisorState):
     )
     
     result = analyzer_agent.invoke({"messages": [combined_message]})
-    return {"messages": [AIMessage(content=str(result))]}
+    
+    if isinstance(result, dict) and "messages" in result:
+        response_content = result["messages"][-1].content
+    else:
+        response_content = str(result)
+
+    return {"messages": [AIMessage(content=response_content)]}
 
 def rag_node(state: SupervisorState):
-    print("Rag Node Working\n")
-    pdf_content = state.get("pdf_markdown", "")
-    enhanced_messages = state["messages"].copy()
+    print("--- RAG Node Working ---")
+    vector_store = state.get("vector_store") 
     
-    if pdf_content:
-        enhanced_messages.append(HumanMessage(
-            content=f"Context:\n\n<pdf_content>\n{pdf_content}\n</pdf_content>"
-        ))
+    if vector_store is None:
+        return {"messages": [AIMessage(content="I cannot perform RAG because no document has been processed.")]}
+
+    retrieve_context = create_retrieve_context_tool(vector_store)
+    tools = [retrieve_context]
     
-    result = rag_agent.invoke({"messages": enhanced_messages})
+    rag_agent = create_rag_agent(
+        retrieve_context
+    )
+    
+    result = rag_agent.invoke({"messages": state["messages"]}) 
     
     last_message = result["messages"][-1]
     content = last_message.content
-    
+
     return {"messages": [AIMessage(content=content)]}
 
 def flashcards_node(state: SupervisorState):
@@ -150,22 +161,20 @@ workflow.add_edge("flashcards", END)
 
 supervisor_app = workflow.compile()
 
-# Test
-from tools.analyzer_tools.pdf_loader import extract_pdf_content
 
-pdf_path = "C:/Users/ahmed/Projects/multi-purpose-ai-agent/data/logique.pdf"
-markdown = extract_pdf_content(pdf_path)
+# pdf_path = "C:/Users/ahmed/Projects/multi-purpose-ai-agent/data/logique.pdf"
+# markdown = extract_pdf_content(pdf_path)
 
-initial_state = {
-    "messages": [HumanMessage(content="Give me a summary of the main concepts ?")],
-    "pdf_markdown": markdown,
-    "next": "supervisor"
-}
+# initial_state = {
+#     "messages": [HumanMessage(content="Génerer des flashcards pour ce pdf")],
+#     "pdf_markdown": markdown,
+#     "next": "supervisor"
+# }
 
-for chunk in supervisor_app.stream(initial_state, stream_mode="values"):
-    if "messages" in chunk:
-        last_message = chunk["messages"][-1]
+# for chunk in supervisor_app.stream(initial_state, stream_mode="values"):
+#     if "messages" in chunk:
+#         last_message = chunk["messages"][-1]
         
-        # Only print AI messages (skip human messages with context)
-        if isinstance(last_message, AIMessage):
-            last_message.pretty_print()
+#         # Only print AI messages (skip human messages with context)
+#         if isinstance(last_message, AIMessage):
+#             last_message.pretty_print()

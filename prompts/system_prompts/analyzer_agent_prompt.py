@@ -47,12 +47,7 @@ Return a JSON array of enriched concepts:
   {{
     "name": "Concept name",
     "definition": "Clear, complete explanation",
-    "significance": "Why it matters with real-world context",
-    "difficulty": "foundational|intermediate|advanced",
-    "prerequisites": ["concept1", "concept2"],
-    "key_points": ["point1", "point2", "point3"],
     "examples": ["example1", "example2"],
-    "sources": ["source1 if searched", "source2 if searched"]
   }}
 ]
 

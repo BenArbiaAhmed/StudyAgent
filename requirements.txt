@@ -20,3 +20,4 @@ instructor
 langchain-google-community
 langchain-ollama
 ollama
+streamlit

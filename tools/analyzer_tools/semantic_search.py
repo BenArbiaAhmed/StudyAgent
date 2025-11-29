@@ -108,6 +108,30 @@ def setup_for_rag(
         print(f"Failed to setup vector store for RAG: {e}")
         raise
 
+def setup_rag_from_text(
+    document_text: str,
+    document_source: str,
+    collection_name: str,
+    chunk_size=1000,
+    chunk_overlap=200,
+) -> Chroma:
+    """Setup RAG pipeline using already extracted markdown text."""
+    try:
+        doc = load_document(document_source, document_text)
+        splits = split_text([doc], chunk_size, chunk_overlap)
+        print(f"Created {len(splits)} chunks")
+        
+        vector_store = create_vector_store(collection_name)
+        
+        ids = store_documents(splits, vector_store)
+        print(f"Stored {len(ids)} document chunks in vector store")
+        
+        return vector_store
+        
+    except Exception as e:
+        print(f"Failed to setup vector store from text: {e}")
+        raise
+
 
 def create_retrieve_context_tool(vector_store: Chroma):
     """Factory function to create a retrieve_context tool with access to vector_store."""
