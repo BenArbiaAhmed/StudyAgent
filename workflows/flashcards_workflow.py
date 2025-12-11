@@ -16,62 +16,80 @@ llm = ChatGoogleGenerativeAI(
 def generator_node(state: AgentState):
     """First pass generation."""
     print("GENERATING CARDS")
-    prompt = ChatPromptTemplate.from_template(
-        "Generate high-quality flashcards based on this text: {text}"
-    )
-    chain = prompt | llm.with_structured_output(FlashcardDeck)
-    result = chain.invoke({"text": state["source_text"]})
-    
-    return {"deck": result, "iteration_count": 1}
+    try:
+        prompt = ChatPromptTemplate.from_template(
+            "Generate high-quality flashcards based on this text: {text}"
+        )
+        chain = prompt | llm.with_structured_output(FlashcardDeck)
+        result = chain.invoke({"text": state["source_text"]})
+        
+        return {"deck": result, "iteration_count": 1}
+    except Exception as e:
+        print(f"Error generating flashcards: {e}")
+        # Return empty deck on error
+        return {"deck": FlashcardDeck(cards=[]), "iteration_count": 1}
 
 def critic_node(state: AgentState):
     """Reviews the cards for quality."""
     print("CRITIQUING CARDS")
-    deck_content = "\n".join([f"Q: {c.front} | A: {c.back}" for c in state["deck"].cards])
-    
-    prompt = ChatPromptTemplate.from_template(
-        """You are a harsh educational critic. Review these flashcards:
-        {deck}
+    try:
+        if not state["deck"].cards:
+            return {"critique": "No cards to critique", "revision_needed": False}
         
-        Criteria:
-        1. Answers must be concise (under 20 words).
-        2. No "Yes/No" questions allowed.
-        3. Information must be accurate based on the source text.
+        deck_content = "\n".join([f"Q: {c.front} | A: {c.back}" for c in state["deck"].cards])
         
-        If they violate these rules, set 'needs_revision' to True."""
-    )
-    
-    chain = prompt | llm.with_structured_output(Critique)
-    result = chain.invoke({"deck": deck_content})
-    
-    return {
-        "critique": result.critique_text, 
-        "revision_needed": result.needs_revision
-    }
+        prompt = ChatPromptTemplate.from_template(
+            """You are a harsh educational critic. Review these flashcards:
+            {deck}
+            
+            Criteria:
+            1. Answers must be concise (under 20 words).
+            2. No "Yes/No" questions allowed.
+            3. Information must be accurate based on the source text.
+            
+            If they violate these rules, set 'needs_revision' to True."""
+        )
+        
+        chain = prompt | llm.with_structured_output(Critique)
+        result = chain.invoke({"deck": deck_content})
+        
+        return {
+            "critique": result.critique_text, 
+            "revision_needed": result.needs_revision
+        }
+    except Exception as e:
+        print(f"Error critiquing flashcards: {e}")
+        # On error, skip revision
+        return {"critique": f"Error during critique: {e}", "revision_needed": False}
 
 def refiner_node(state: AgentState):
     """Fixes the cards based on feedback."""
     print("REFINING CARDS")
-    deck_content = "\n".join([f"Q: {c.front} | A: {c.back}" for c in state["deck"].cards])
-    
-    prompt = ChatPromptTemplate.from_template(
-        """Refine these flashcards based on the critique.
+    try:
+        deck_content = "\n".join([f"Q: {c.front} | A: {c.back}" for c in state["deck"].cards])
         
-        Original Text: {source}
-        Current Cards: {deck}
-        Critique: {critique}
+        prompt = ChatPromptTemplate.from_template(
+            """Refine these flashcards based on the critique.
+            
+            Original Text: {source}
+            Current Cards: {deck}
+            Critique: {critique}
+            
+            Output the corrected FlashcardDeck."""
+        )
         
-        Output the corrected FlashcardDeck."""
-    )
-    
-    chain = prompt | llm.with_structured_output(FlashcardDeck)
-    result = chain.invoke({
-        "source": state["source_text"],
-        "deck": deck_content,
-        "critique": state["critique"]
-    })
-    
-    return {"deck": result, "iteration_count": state["iteration_count"] + 1}
+        chain = prompt | llm.with_structured_output(FlashcardDeck)
+        result = chain.invoke({
+            "source": state["source_text"],
+            "deck": deck_content,
+            "critique": state["critique"]
+        })
+        
+        return {"deck": result, "iteration_count": state["iteration_count"] + 1}
+    except Exception as e:
+        print(f"Error refining flashcards: {e}")
+        # Return original deck on error
+        return {"deck": state["deck"], "iteration_count": state["iteration_count"] + 1}
 
 
 def should_continue(state: AgentState):
