@@ -4,13 +4,15 @@ from response_format.key_concepts_response_format import ConceptList
 from memory.memory import checkpointer
 from langchain_core.runnables import RunnableLambda
 from tools.analyzer_tools.web_search_tool import web_search
+from tools.analyzer_tools.firecrawl_tool import web_scrape_for_concepts
 from prompts.system_prompts.analyzer_agent_prompt import CONCEPT_EXTRACTION_WITH_SEARCH_PROMPT
 
 
 analyzer_agent = create_agent(
             model=basic_model,
             tools=[      
-                web_search   
+                web_search,
+                web_scrape_for_concepts
             ],
             response_format=ConceptList,
             system_prompt=CONCEPT_EXTRACTION_WITH_SEARCH_PROMPT

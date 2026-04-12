@@ -33,6 +33,8 @@ When searching:
 3. Search for examples if the material lacks them
 4. Prioritize searching for advanced/complex concepts over basic ones
 5. Stop searching once all concepts have adequate detail
+6. If the user provides a URL, prefer web_scrape_for_concepts for full-page context
+7. Use web_search for quick definitions and broad discovery; use web_scrape_for_concepts for detailed source material
 
 ## GUIDELINES
 - Focus on essential concepts for understanding the subject

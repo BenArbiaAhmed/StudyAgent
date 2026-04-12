@@ -12,7 +12,7 @@ rapidocr-onnxruntime
 pytesseract
 langchain-docling
 uv
-"mineru[core]"
+mineru[core]
 google-genai
 pypdf
 langchain-chroma
@@ -21,3 +21,4 @@ langchain-google-community
 langchain-ollama
 ollama
 streamlit
+firecrawl-py

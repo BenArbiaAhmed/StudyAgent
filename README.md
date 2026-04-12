@@ -55,6 +55,7 @@ Create a `.env` file in the project root to configure model providers. Common va
 - `GOOGLE_API_KEY`
 - `GROQ_API_KEY`
 - `OLLAMA_BASE_URL` (if using local Ollama)
+- `FIRECRAWL_API_KEY` (optional, enables full webpage scraping in the analyzer agent)
 
 Only set the providers you plan to use. The app loads `.env` via `python-dotenv`.
 

@@ -27,8 +27,9 @@ class SearchContextMiddleware(AgentMiddleware):
         latest_message = messages[-1] if messages else None
         if hasattr(latest_message, 'tool_calls') and latest_message.tool_calls:
             for tool_call in latest_message.tool_calls:
-                if tool_call.get('name') == 'web_search':
-                    query = tool_call.get('args', {}).get('query', '')
+                if tool_call.get('name') in ('web_search', 'web_scrape_for_concepts'):
+                    args = tool_call.get('args', {})
+                    query = args.get('query', args.get('url', ''))
                     return {
                         "search_history": search_history + [query]
                     }
