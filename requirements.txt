@@ -22,3 +22,6 @@ langchain-ollama
 ollama
 streamlit
 firecrawl-py
+paddleocr
+paddlepaddle
+pillow

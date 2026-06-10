@@ -5,3 +5,4 @@ __pycache__/
 *.pyc
 important.py
 .venv/
+.claude/
